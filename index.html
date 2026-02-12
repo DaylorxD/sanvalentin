@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Mi amor 🖤</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#000;
+    color:white;
+    overflow:hidden;
+}
+
+/* 🎥 EFECTO GRANULADO */
+body::after{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-image:
+        radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size:3px 3px;
+    opacity:0.15;
+    pointer-events:none;
+}
+
+/* Pantallas */
+.screen{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    transition:1s;
+}
+
+.hidden{
+    opacity:0;
+    pointer-events:none;
+}
+
+/* Nombre rosado brillante */
+.nombre{
+    font-size:3em;
+    letter-spacing:5px;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{ text-shadow:0 0 10px #ff4da6, 0 0 20px #ff4da6; }
+    to{ text-shadow:0 0 25px #ff80bf, 0 0 50px #ff80bf; }
+}
+
+p{
+    margin-top:20px;
+    font-size:1.2em;
+    color:#bbb;
+}
+
+/* Botones */
+.buttons{
+    margin-top:40px;
+    position:relative;
+    width:300px;
+    height:120px;
+}
+
+button{
+    padding:12px 25px;
+    font-size:1em;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    position:absolute;
+    transition:0.3s;
+}
+
+#yes{
+    left:20%;
+    background:#ff4da6;
+    color:white;
+}
+
+#yes:hover{
+    transform:scale(1.1);
+}
+
+#no{
+    right:20%;
+    background:#333;
+    color:white;
+}
+
+/* Corazones rosados */
+.heart{
+    position:absolute;
+    top:-10px;
+    color:#ff4da6;
+    font-size:18px;
+    animation: fall linear forwards;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(100vh);
+        opacity:0;
+    }
+}
+
+/* Carta */
+.envelope{
+    width:260px;
+    height:170px;
+    background:#1a1a1a;
+    position:relative;
+    margin-top:40px;
+    cursor:pointer;
+    border:2px solid #ff4da6;
+    perspective:1000px;
+    transition:0.8s;
+}
+
+.flap{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#ff4da6;
+    clip-path:polygon(0 0, 50% 50%, 100% 0);
+    transform-origin:top;
+    transition:1s;
+    z-index:2;
+}
+
+.letter{
+    position:absolute;
+    width:90%;
+    height:90%;
+    background:#ffe6f2;
+    color:#000;
+    top:5%;
+    left:5%;
+    padding:15px;
+    transform:translateY(100%);
+    transition:1s;
+    font-size:0.9em;
+    opacity:0;
+    border-radius:8px;
+}
+
+.open .flap{
+    transform:rotateX(180deg);
+}
+
+.open .letter{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* Firma ajustada más arriba */
+.firma{
+    display:block;
+    margin-top:12px; /* subida un poco más */
+    font-weight:bold;
+    font-size:1em;
+    background:linear-gradient(45deg,#ff2e9b,#ff6ec7);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 6px rgba(255,105,180,0.6);
+}
+
+/* Oscurecer pantalla */
+.fadeOut{
+    animation: fadeScreen 2s forwards;
+}
+
+@keyframes fadeScreen{
+    to{
+        background:black;
+    }
+}
+
+/* TE AMO gigante final */
+.bigLove{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    font-size:4em;
+    color:#ff4da6;
+    text-shadow:0 0 20px #ff4da6, 0 0 40px #ff80bf;
+    opacity:0;
+    text-align:center;
+}
+
+.bigLove.show{
+    animation: loveFinal 2s forwards, heartbeat 2s infinite 2s;
+}
+
+@keyframes loveFinal{
+    0%{
+        transform:translate(-50%,-50%) scale(0.5);
+        opacity:0;
+    }
+    50%{
+        transform:translate(-50%,-50%) scale(1.1);
+        opacity:1;
+    }
+    100%{
+        transform:translate(-50%,-50%) scale(1);
+        opacity:1;
+    }
+}
+
+@keyframes heartbeat{
+    0%,100%{ transform:translate(-50%,-50%) scale(1); }
+    50%{ transform:translate(-50%,-50%) scale(1.05); }
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="whoosh">
+    <source src="whoosh.mp3" type="audio/mpeg">
+</audio>
+
+<div class="screen" id="screen1">
+    <div class="nombre">Mi amor</div>
+    <p>¿Quieres ser mi San Valentín hoy, mañana y siempre?</p>
+
+    <div class="buttons">
+        <button id="yes" onclick="nextScreen()">Sí 🖤</button>
+        <button id="no" onmouseover="moveNo()">No</button>
+    </div>
+</div>
+
+<div class="screen hidden" id="screen2">
+    <div class="nombre">Mi amor</div>
+    <p>Sabía que dirías que sí…</p>
+
+    <div class="envelope" id="envelope" onclick="openLetter(this)">
+        <div class="flap"></div>
+        <div class="letter">
+            Mi amor,<br><br>
+            Eres lo más especial que tengo.  
+            Gracias por existir en mi vida.  
+            Te amo muuuuuuucho 🖤
+            <span class="firma">De tu celosito 💕</span>
+        </div>
+    </div>
+</div>
+
+<div class="bigLove" id="bigLove">
+    TE AMO MUUUUUUCHO 💖
+</div>
+
+<script>
+
+document.addEventListener("click", function() {
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.3;
+    music.play();
+}, { once: true });
+
+function moveNo(){
+    const btn = document.getElementById("no");
+    const x = Math.random()*200 - 100;
+    const y = Math.random()*100 - 50;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+function nextScreen(){
+    document.getElementById("screen1").classList.add("hidden");
+    document.getElementById("screen2").classList.remove("hidden");
+}
+
+function openLetter(element){
+    const sound = document.getElementById("whoosh");
+    const big = document.getElementById("bigLove");
+
+    if(element.classList.contains("open")){
+        element.classList.remove("open");
+        sound.play();
+
+        setTimeout(()=>{
+            document.body.classList.add("fadeOut");
+            document.getElementById("screen2").style.opacity="0";
+            big.classList.add("show");
+        },800);
+
+    } else {
+        element.classList.add("open");
+        sound.play();
+    }
+}
+
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="💗";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=(Math.random()*3+2)+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),5000);
+}
+setInterval(createHeart,300);
+
+</script>
+
+</body>
+</html>
